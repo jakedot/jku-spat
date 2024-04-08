@@ -1,0 +1,139 @@
+﻿// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Users {
+  id integer [primary key, increment]
+  email email [unique]
+  hashed_password text
+  created_at timestamp
+  modified_at timestamp
+}
+
+Enum customerRoles {
+  seller_customer
+  buyer_customer
+}
+
+Table Profiles {
+  id integer [primary key, increment]
+  users_id integer [ref: - Users.id]
+  role customerRoles
+  email email [unique]
+  first_name varchar
+  last_name varchar
+  mobile_number varchar
+  address text
+  created_at timestamp
+  modified_at timestamp
+}
+
+Table Shops {
+  id integer [primary key,increment]
+  profile_id integer [ref: <> Profiles.id]
+  role roles
+  shop_title varchar [unique]
+  telephone_number varchar
+  shop_register_number varchar
+  address text
+  created_at timestamp
+  modified_at timestamp
+}
+
+Table Tags {
+id int [pk, increment]
+title varchar [unique]
+slug varchar [unique]
+created timestamp
+modified timestamp
+}
+
+Table Brands {
+id int [pk, increment]
+slug varchar [unique]
+title varchar
+created timestamp
+modified timestamp
+}
+
+Table Categories{
+id int [pk, increment]
+title varchar
+slug varchar [unique]
+description text
+parent int [ref: > Categories.id, null]
+created timestamp
+modified timestamp
+}
+
+Table Products{
+id int [pk, increment]
+sku varchar [unique]
+slug varchar [unique]
+title varchar
+subtitle varchar
+brand int [ref: > Brands.id]
+category int [ref: > Categories.id]
+tags int [ref: <> Tags.id]
+shop_id int [ref: <> Shops.id]
+created timestamp
+modified timestamp
+}
+
+Table Orders {
+  id integer [primary key, increment]
+  profiles_id integer [ref: > Profiles.id] 
+  product_id integer [ref: > Products.id]
+  ordered_number integer
+  delivery_date datetime2
+  delivery_address int
+  created timestamp
+  modified timestamp
+}
+
+Table reviewsRatings {
+  id integer [primary key]
+  rating_price float
+  rating_quality float
+  rating_creativity float
+  review_title varchar
+  review_body text
+  recommend_to_others bool [null]
+  profiles_id integer [ref: > Profiles.id ]
+  products_id integer [ref: > Products.id ]
+  isBuyer bool 
+  created_at timestamp
+}
+
+Enum systemRoles {
+  moderators
+  investor
+  administrator
+  super_user
+}
+
+Table AdminUsers {
+  id integer [primary key, increment]
+  email email [unique]
+  hashed_password varchar
+  first_name varchar
+  last_name varchar
+  role systemRoles
+  privilages_id integer [ref: <> Privilages.id]
+  mobile_number varchar [unique]
+  created timestamp
+  modified timestamp
+}
+
+
+Table Privilages {
+  id integer [primary key, increment]
+  role systemRoles
+  title varchar
+  privilage bool
+  description text
+  created timestamp
+  modified timestamp
+}
+
+
+
